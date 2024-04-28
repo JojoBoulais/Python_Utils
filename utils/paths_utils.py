@@ -1,5 +1,20 @@
 import os
 import logging
+import math
+
+def search_files(path, depth=math.inf, regex=""):
+    """
+
+    :param path:
+    :param depth:
+    :param regex:
+    :return:
+    """
+
+    elements = os.listdir(path)
+
+
+
 
 class PathMaker():
 
@@ -16,15 +31,15 @@ class PathMaker():
     @staticmethod
     def dict_folder(name, permission=None):
 
-        return {name: {permission: "permission", 'subtree': {} }}
+        return {name: {"permission": permission, 'subtree': {} }}
 
     def build_dict_folder(self, path, dict_folder):
-        print("heeeere")
         for folder in dict_folder.items():
+            print(folder)
             full_path = os.path.join(path, folder[0])
             self.create_folder(full_path, folder[1]["permission"])
             if folder[1]["subtree"]:
-                self.build_dict_folder(full_path, dict_folder)
+                self.build_dict_folder(full_path, folder[1]["subtree"])
 
     def build_tree_from_dict(self, dict_folder):
         """
@@ -72,15 +87,18 @@ from locations import DESKTOP
 pmaker = PathMaker(DESKTOP)
 
 
-first_root = PathMaker.dict_folder("first_root")
+root = PathMaker.dict_folder("first_root")
 second_root = PathMaker.dict_folder("second_root")
 
-inside_fist = PathMaker.dict_folder("first_root")
-first_root["subtree"].update(inside_fist)
+inside_first = PathMaker.dict_folder("inside_root")
+inside_second = PathMaker.dict_folder("inside_first")
+inside_first["inside_root"]["subtree"].update(inside_second)
 
-first_root.update(second_root)
+root["first_root"]["subtree"].update(inside_first)
+
+root.update(second_root)
 
 
 
 
-pmaker.build_tree_from_dict(first_root)
+pmaker.build_tree_from_dict(root)
