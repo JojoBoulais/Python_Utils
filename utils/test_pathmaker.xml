@@ -1,0 +1,13 @@
+<data>
+    <folder name="folder1" permission="0444">
+            <folder name="folder1_depth_1"  permission="0444">
+                <folder name="folder1_depth_2"  permission="0444"/>
+                <file name="bruuuh.txt" permission="0444"/>
+            </folder>
+    </folder>
+
+    <folder name="folder2" permission="0444">
+        <folder name="folder2_depth_1" permission="0444"/>
+    </folder>
+
+</data>

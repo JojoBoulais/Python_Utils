@@ -1,4 +1,5 @@
 import re
+import urllib
 
 HTTPS = "https:"
 DESKTOP = "C:\\Users\\Jordan\\Desktop\\"
