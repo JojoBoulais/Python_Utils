@@ -32,7 +32,7 @@ class CustomFormatter(logging.Formatter):
         return formatter.format(record)
 
 
-class MyLogger(logging.Logger):
+class CustomLogger(logging.Logger):
     def __init__(self,
                  name=__name__,
                  level=logging.NOTSET):
@@ -49,9 +49,3 @@ class MyLogger(logging.Logger):
     def info(self, msg, *args, xtra=None, **kwargs):
         extra_info = xtra if xtra is not None else self.extra_info
         super().info(msg, *args, extra=extra_info, **kwargs)
-
-
-myLogger = MyLogger()
-
-myLogger.info("yippppi")
-myLogger.warning("yippppi")

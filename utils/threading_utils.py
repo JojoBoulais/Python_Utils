@@ -61,15 +61,3 @@ def threads_from_func_on_list(some_list, func, *args, **kwargs):
         threads.append(t)
 
     return threads
-
-
-def my_test_func(some_list, kaka="sasa"):
-    for el in some_list:
-        print(el, f": toto {kaka}")
-
-
-
-t = " ".join(map(lambda x: str(x), range(0, 10)))
-
-t += "saas"
-print(t)
