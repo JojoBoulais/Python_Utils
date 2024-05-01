@@ -2,6 +2,7 @@ import logging
 import math
 import os
 import re
+
 import xml.etree.ElementTree as xml_tree
 
 
@@ -63,16 +64,22 @@ class PathMaker():
 
         return {name: {"permission": permission, 'subtree': {}}}
 
-    def build_dict_folder(self, path, dict_folder):
+    def __build_dict_folder(self, path, dict_folder):
+        """
+        Recursively creates folders and subfolders from a "dict_folder"
+
+        :param str path:
+        :param dict dict_folder:
+        """
         for folder in dict_folder.items():
             full_path = os.path.join(path, folder[0])
             self.create_folder(full_path, folder[1]["permission"])
             if folder[1]["subtree"]:
-                self.build_dict_folder(full_path, folder[1]["subtree"])
+                self.__build_dict_folder(full_path, folder[1]["subtree"])
 
     def build_branches_from_dict(self, dict_folder):
         """
-        From root path, create tree based on provided tree_dict argument.
+        From root path, creates tree based on provided tree_dict argument.
         Expected tree_dict format is:
 
         {
@@ -92,25 +99,31 @@ class PathMaker():
             logging.error(f"Provided argument: 'tree_dict' is not a dict.")
             return
 
-        self.build_dict_folder(self.__root_path, dict_folder)
+        self.__build_dict_folder(self.__root_path, dict_folder)
 
     # ------------------- BUILD FROM XML -------------------
 
-    def build_xml_folders(self, root, folder):
+    def __build_xml_folders(self, root, folder):
+        """
+        Recursively creates folders and subfolders from a "dict_folder"
 
+        :param str root: Current path from which to create folders structure.
+        :param xml_tree.Element folder: Current xml_tree.Element from which to create folders structure.
+        :return:
+        """
         for element in folder:
             name = element.attrib["name"]
             permission = element.attrib["permission"]
             full_path = os.path.join(root, name)
             if element.tag == "folder":
                 self.create_folder(full_path, permission)
-                self.build_xml_folders(full_path, element)
+                self.__build_xml_folders(full_path, element)
             elif element.tag == "file":
                 self.create_file(full_path, permission)
 
     def build_branches_from_xml(self, xml_path, root_permission=None):
         """
-
+        From root path, creates tree based on provided tree_dict argument.
         :param root_path:
         :param xml_path:
         :return:
@@ -125,13 +138,19 @@ class PathMaker():
         tree = xml_tree.parse(xml_path)
         root = tree.getroot()
 
-        self.build_xml_folders(self.__root_path, root)
+        self.__build_xml_folders(self.__root_path, root)
 
     # ------------------- BASE METHODS -------------------
 
     @staticmethod
     def create_folder(path, permission=None):
+        """
+        Created folders from given path if it doesn't already exists.
 
+        :param str path:
+        :param str permission:
+        :rtype: str
+        """
         if os.path.exists(path):
             return path
 
@@ -147,7 +166,13 @@ class PathMaker():
 
     @staticmethod
     def create_file(filepath, permission=None):
+        """
+        Created folders from given filepath if it doesn't already exists.
 
+        :param str path:
+        :param str permission:
+        :rtype: str
+        """
         if os.path.exists(filepath):
             return filepath
 
@@ -186,3 +211,8 @@ pmaker.build_branches_from_dict(tree)
 
 # BUILDING FROM XML
 pmaker.build_branches_from_xml(r"C:\Users\Jordan\PycharmProjects\python_utils\utils\test_pathmaker.xml")
+
+tree = xml_tree.parse(r"C:\Users\Jordan\PycharmProjects\python_utils\utils\test_pathmaker.xml")
+root = tree.getroot()
+
+print(root)

@@ -1,9 +1,14 @@
+import os
 import re
 import urllib
+import urllib.request
+
+from locations import DESKTOP
 
 HTTPS = "https:"
-DESKTOP = "C:\\Users\\Jordan\\Desktop\\"
 
+
+# ------------------- CLASSES -------------------
 
 class UrlReq(object):
     DEFAULT_HEADER = {"User-Agent": "Mozilla/5.0 (X11; Linux i686)"}
@@ -51,7 +56,7 @@ class UrlReq(object):
 
 class UrlParser(UrlReq):
 
-    def __init__(self, url, header = None):
+    def __init__(self, url, header=None):
 
         super().__init__(url, header)
 
@@ -141,6 +146,7 @@ class UrlParser(UrlReq):
     def get_titles(self):
         pass
 
+
 class UrlPage(UrlParser):
 
     def __init__(self, url, header=None):
@@ -175,7 +181,7 @@ class UrlPage(UrlParser):
         return self._titles
 
 
-#---
+# ---
 
 class UrlImg(object):
 
@@ -197,47 +203,44 @@ class UrlImg(object):
         return self._src
 
 
+# ------------------- FUNCTIONS -------------------
 
+def copy_images_from_url(url, destination):
+    """
+    Copy all images from given url into destination
 
+    :param str url:
+    :param str destination:
+    :return:
+    """
+
+    output_images = []
+
+    for url_image in url_page.images:
+        try:
+            path = url_image.src
+            if HTTPS not in path:
+                path = HTTPS + path
+            resource = urllib.request.urlopen(path)
+            output = open(DESKTOP + os.path.basename(path), "wb")
+            output_images.append(output)
+            output.write(resource.read())
+            output.close()
+
+        except Exception as e:
+            print(e)
+
+    return output_images
 
 
 if __name__ == "__main__":
 
     url = "https://fr.wikipedia.org/wiki/Ollantaytambo#:~:text=Ollantaytambo%20est%20une%20forteresse%20inca,apr%C3%A8s%20la%20chute%20de%20Cuzco."
-    #url = "https://stackoverflow.com/questions/13532531/python-stats-how-do-i-write-it-to-a-human-readable-file"
-    #url = "file:///C:/Users/Jordan/Desktop/Web_1_Projet_Final-main/Web_1_Projet_Final-main/accueil.html"
-    url = "https://www.ncbi.nlm.nih.gov/books/NBK559166/"
+    # url = "https://stackoverflow.com/questions/13532531/python-stats-how-do-i-write-it-to-a-human-readable-file"
+    # url = "file:///C:/Users/Jordan/Desktop/Web_1_Projet_Final-main/Web_1_Projet_Final-main/accueil.html"
+    # url = "https://www.ncbi.nlm.nih.gov/books/NBK559166/"
 
     url_page = UrlPage(url)
 
-
-    # print(len(url_page.get_paragraphs()))
-
-
-
-    for para in url_page.get_hrefs():
-
+    for para in url_page.get_paragraphs():
         print(para)
-
-    #     hyper_link = re.findall("<a((?!(</a>)).{1,})", str(para).replace("\\", ""))
-    #
-    #     #print(str(para).replace("\\", ""))
-    #
-    #     print(hyper_link)
-    #     break
-
-
-    # for url_image in url_page.images:
-    #     try:
-    #         path = url_image.src
-    #         if HTTPS not in path:
-    #             path = HTTPS + path
-    #         resource = urllib.request.urlopen(path)
-    #         output = open(DESKTOP + os.path.basename(path), "wb")
-    #         output.write(resource.read())
-    #         output.close()
-    #
-    #     except Exception as e:
-    #         print(e)
-#blablabla
-#sasasasa
