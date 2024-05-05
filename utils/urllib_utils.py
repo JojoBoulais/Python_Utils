@@ -209,7 +209,7 @@ def copy_images_from_url(url, destination):
     """
     Copy all images from given url into destination
 
-    :param str url:
+    :param str url: given url
     :param str destination:
     :return:
     """
