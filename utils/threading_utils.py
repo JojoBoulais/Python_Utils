@@ -1,8 +1,6 @@
 import math
 import multiprocessing
 import threading
-import copy
-import os
 
 CPU_COUNT = multiprocessing.cpu_count()
 

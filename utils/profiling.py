@@ -2,37 +2,13 @@ import sys
 import os
 import functools
 import time
-from paths import AUTO_DELETED_DAILY
+from locations import AUTO_DELETED_DAILY
 import uuid
 from pstats import SortKey
-import mathplotlib
+import matplotlib
 import matplotlib.pyplot as plt
 import time
-
-
-# -----------BASE DECORATOR---------------
-# def decorator(func):
-#     def wrapped_func(func, *args, **kwargs):
-#         DO SOMETHING
-#         func(*args, **kwargs)
-#         DO SOMETHING
-#
-#     return wrapped_func
-
-# -----------ClASS DECORATOR---------------
-
-# class decorator(object):
-#     def __init__(self, name):
-#         self.name = name
-#
-#     def __call__(self, func):
-#
-#         def wrapped_func(*args, **kwargs):
-#           DO SOMETHING
-#           func(*args, **kwargs)
-#           DO SOMETHING
-#
-#         return wrapped_func
+from collections.abc import Iterable
 
 
 class profile(object):
@@ -138,25 +114,35 @@ class avrg_time(object):
         return wrapped_func
 
 class matplotthis(object):
-    """Requires function"""
+    """Requires iterable arguments to amplify there content."""
 
-    def __init__(self, name, iterations):
-        self.name = name
+    def __init__(self, iterations, amp_factor=10):
         self.iterations = iterations
+        self.amp_factor = amp_factor
+
     def __call__(self, func):
+        def wrapped_func(*args, **kwargs):
 
-    def wrapped_func(*args, **kwargs):
+            for i in range(1, self.iterations):
 
-        for i in self.iterations:
+                new_args = []
+                taille_problem = 0
+                # Amplifying any Iterable argument
+                for arg in args:
+                    if isinstance(arg, Iterable):
+                        amplified_arg = arg * self.amp_factor * i
+                        new_args.append(amplified_arg)
+                        taille_problem += len(amplified_arg)
+                    else:
+                        new_args.append(arg)
+                start_time = time.time()
+                func(*new_args, **kwargs)
+                end_time = time.time() - start_time
+                plt.scatter(taille_problem, end_time, alpha=0.3, edgecolors='none')
 
-            start_time = time.time()
-            func(*args, **kwargs)
-            end_time = time.time() - start_time
+            plt.title(f"Calling '{func.__name__}' x{self.iterations} times.")
+            plt.xlabel("Taille du probleme")
+            plt.ylabel("Time (sec)")
 
-            mathplotlib.plot
-
+            plt.show()
         return wrapped_func
-
-t = [10] * 10
-
-print(t)
