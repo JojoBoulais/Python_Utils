@@ -3,8 +3,6 @@ import re
 import urllib
 import urllib.request
 
-from locations import DESKTOP
-
 HTTPS = "https:"
 
 
