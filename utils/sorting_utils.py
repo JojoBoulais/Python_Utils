@@ -89,8 +89,6 @@ def merge_sort(array):
             j += 1
             k += 1
 
-
-
 # function to find the partition position
 def __partition(array, low, high):
     """Used by quick_sort func."""
