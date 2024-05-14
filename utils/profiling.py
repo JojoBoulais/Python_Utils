@@ -126,6 +126,7 @@ class matplotthis(object):
             for i in range(1, self.iterations):
 
                 new_args = []
+                new_kwargs = {}
                 taille_problem = 0
                 # Amplifying any Iterable argument
                 for arg in args:
@@ -135,8 +136,17 @@ class matplotthis(object):
                         taille_problem += len(amplified_arg)
                     else:
                         new_args.append(arg)
+
+                for key, arg in kwargs.items():
+                    if isinstance(arg, Iterable):
+                        amplified_arg = arg * self.amp_factor * i
+                        new_kwargs[key] = amplified_arg
+                        taille_problem += len(amplified_arg)
+                    else:
+                        new_kwargs[key] = arg
+
                 start_time = time.time()
-                func(*new_args, **kwargs)
+                func(*new_args, **new_kwargs)
                 end_time = time.time() - start_time
                 plt.scatter(taille_problem, end_time, alpha=0.3, edgecolors='none')
 
