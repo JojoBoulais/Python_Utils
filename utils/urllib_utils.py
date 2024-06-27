@@ -203,6 +203,27 @@ class UrlImg(object):
 
 # ------------------- FUNCTIONS -------------------
 
+
+def copy_hrefs(url, destination="C:\\Users\\Jordan\\Desktop", regex=""):
+
+    output_refs = []
+    url_page = UrlPage(url)
+
+    for href in url_page.get_hrefs():
+        try:
+            if regex and not re.match(regex, href):
+                continue
+            print(href)
+            resource = urllib.request.urlopen(href)
+            output = open(os.path.join(destination, os.path.basename(href)), "wb")
+            output_refs.append(output)
+            output.write(resource.read())
+            output.close()
+        except Exception as e:
+            print(e)
+
+    return output_refs
+
 def copy_images_from_url(url, destination):
     """
     Copy all images from given url into destination
@@ -218,7 +239,9 @@ def copy_images_from_url(url, destination):
 
     for url_image in url_page.images:
         try:
+
             path = url_image.src
+            print(path)
             if HTTPS not in path:
                 path = HTTPS + path
             resource = urllib.request.urlopen(path)
@@ -231,3 +254,4 @@ def copy_images_from_url(url, destination):
             print(e)
 
     return output_images
+
