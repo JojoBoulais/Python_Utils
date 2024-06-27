@@ -213,7 +213,6 @@ def copy_hrefs(url, destination="C:\\Users\\Jordan\\Desktop", regex=""):
         try:
             if regex and not re.match(regex, href):
                 continue
-            print(href)
             resource = urllib.request.urlopen(href)
             output = open(os.path.join(destination, os.path.basename(href)), "wb")
             output_refs.append(output)
