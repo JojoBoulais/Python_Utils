@@ -1,8 +1,6 @@
 from sorting_utils import merge_sort
 import math
 
-
-
 class BNode():
     def __init__(self, parent_node, btree, elements=None, childs=None):
         self.parent_node = parent_node
@@ -12,7 +10,7 @@ class BNode():
 
     def add_element(self, element, upward=False):
 
-        # Is not a leaf (Comparing elements) -------
+        # Recursing to proper leaf (Comparing elements)
         if self.childs and not upward:
 
             # Adding to the end child
@@ -21,14 +19,13 @@ class BNode():
                 return self
 
             # Comparing all others
-
             for i, e in enumerate(self.elements[:-1]):
                 if element < e:
                     self.childs[i].add_element(element)
                     break
             return self
 
-        # Is a leaf -------------------------
+        # Is a leaf or splitting-------------------------
 
         #Just Adding an element
         self.elements.append(element)
@@ -61,11 +58,11 @@ class BNode():
             else:
                 parent = self.parent_node
                 parent = parent.add_element(new_top_element, upward=True)
-                # Get splitted corresponding parent
+                # If parent got splitted, get corresponding one
                 if isinstance(parent, tuple):
                     parent = parent[0] if self in parent[0].childs else parent[1]
 
-            # Linking new nodes to parent
+            # Creating new nodes and linking to parent
             new_left_node = BNode(parent, self.btree)
             new_left_node.elements = left_elements
             new_left_node.childs = left_childs
