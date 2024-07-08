@@ -141,6 +141,19 @@ class UrlParser(UrlReq):
 
         return cleaned_up
 
+    def get_domains_n_scheme(self):
+        search = re.search(r"^(\w+)://([^/]*)(.*)$", self.url)
+        if search:
+            scheme = search.group(1)
+            domain = search.group(2)
+            reste = search.group(3)
+
+            domain_split = domain.split(".")
+            sld = ".".join(domain_split[:-1])
+            tld = domain_split[-1]
+
+            return {"scheme": scheme, "sld": sld, "domain": domain, "tld":tld, "rest":reste}
+
     def get_titles(self):
         pass
 
@@ -153,6 +166,29 @@ class UrlPage(UrlParser):
         self._hrefs = []
         self._paragraphs = []
         self._titles = []
+        self._scheme = ""
+        self._sld = ""
+        self._tld = ""
+        self.assign_domain_n_scheme()
+
+    def assign_domain_n_scheme(self):
+        data = self.get_domains_n_scheme()
+        if data:
+            self._scheme = data["scheme"]
+            self._sld = data["sld"]
+            self._tld = data["tld"]
+
+    @property
+    def scheme(self):
+        return self._scheme
+
+    @property
+    def sld(self):
+        return self._sld
+
+    @property
+    def tld(self):
+        return self._tld
 
     @property
     def images(self):
@@ -204,6 +240,8 @@ class UrlImg(object):
 # ------------------- FUNCTIONS -------------------
 
 
+
+
 def copy_hrefs(url, destination="C:\\Users\\Jordan\\Desktop", regex=""):
 
     output_refs = []
@@ -253,4 +291,3 @@ def copy_images_from_url(url, destination):
             print(e)
 
     return output_images
-

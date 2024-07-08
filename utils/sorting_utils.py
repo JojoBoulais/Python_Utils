@@ -123,7 +123,7 @@ def quick_sort(array, low=None, high=None):
 
     O(n*log n)
 
-    :param list[int] array:
+    :param array:
     :param int low:
     :param int high:
     """
